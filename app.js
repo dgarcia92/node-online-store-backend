@@ -10,11 +10,12 @@ const app = express();
 
 //Middlewares
 app.use(cors());
-app.use(express.json({ limit: 50 }));
+app.use(express.json());
 app.use(express.static('public'));
 
 //Router
 app.use('/api/cliente', require('./route/cliente'));
+app.use('/api/admin', require('./route/admin'));
 
 dbConnection();
 

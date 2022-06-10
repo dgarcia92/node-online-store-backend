@@ -2,7 +2,7 @@
 const { Schema, model } = require('mongoose');
 
 
-const ClienteSchema = Schema({
+const AdminSchema = Schema({
     nombre : {
         type: String,
         required: [true, 'El nombre es obligatorio'],
@@ -18,28 +18,15 @@ const ClienteSchema = Schema({
         required: [true, 'El email es obligatorio'],
         unique: true
     },
-    pais : {
-        type: String,
-        required: false,
-    },
     password : {
         type: String,
         required: [true, 'El password es obligatorio'],
-    },
-    perfil : {
-        type: String,
-        required: [true, 'El perfil es obligatorio'],
-        default: "perfil.png"
     },
     telefono : {
         type: String,
         required: false,
     },
-    genero : {
-        type: String,
-        required: false,
-    },
-    f_nacimiento : {
+    rol : {
         type: String,
         required: false,
     },
@@ -50,4 +37,4 @@ const ClienteSchema = Schema({
 });
 
 
-module.exports = model( 'Cliente', ClienteSchema );
+module.exports = model( 'Admin', AdminSchema );

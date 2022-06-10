@@ -1,18 +1,18 @@
 'use strinct'
 const { model } = require('mongoose');
-const Cliente  = require('../model/cliente');
+const Admin  = require('../model/admin');
 const bcrypt = require('bcrypt');
 const { generarJWT } = require("../helper/generateJWT");
 
-const addCliente = async (req, res) => {
-    
-    const data = req.body
-    const { nombre, apellido, email, password } = req.body;
+const addAdmin = async (req, res) => {
 
-    const cliente = new Cliente({nombre, apellido, email, password});
+    const data = req.body
+    const { nombre, apellido, email, password, dni, rol } = req.body;
+
+    const admin = new Admin({nombre, apellido, email, password, dni, rol});
 
     /* Esto se puede pasar en un Helper  para no duplicar info*/
-    let existeEmail = await Cliente.findOne( { email } );
+    let existeEmail = await Admin.findOne( { email } );
     if(existeEmail)
     {
         return res.status(404).send({ msg: "El correo ya está registrado"});
@@ -20,15 +20,14 @@ const addCliente = async (req, res) => {
 
     //Encriptar la contraseña
     const salt = bcrypt.genSaltSync(10);
-    cliente.password = bcrypt.hashSync(cliente.password, salt);
+    admin.password = bcrypt.hashSync(admin.password, salt);
     
-    let newClient = await cliente.save();
+    let newAdmin = await admin.save();
 
     res.status(200).send({
-        newClient
+        newAdmin
     });
 }
-
 
 
 const login = async (req, res) => {
@@ -36,13 +35,13 @@ const login = async (req, res) => {
     const {email, password } = req.body;
 
     /* Esto se puede pasar en un Helper  para no duplicar info*/
-    let cliente = await Cliente.findOne( { email } );
-    if(!cliente)
+    let admin = await Admin.findOne( { email } );
+    if(!admin)
     {
         return res.status(404).send({ msg: "El correo no está registrado"});
     }
 
-    const validPassword = await bcrypt.compare(password, cliente.password);
+    const validPassword = await bcrypt.compare(password, admin.password);
 
     if(!validPassword)
     {
@@ -50,18 +49,17 @@ const login = async (req, res) => {
     }
 
      //Generar el JWT
-     const token = await generarJWT( cliente );
+     const token = await generarJWT( admin );
 
     res.status(200).send({
-        cliente,
+        admin,
         token
     });
-
 }
 
 
 module.exports = 
 {
-    addCliente,
+    addAdmin,
     login
 }
